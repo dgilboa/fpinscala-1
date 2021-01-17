@@ -18,6 +18,12 @@ trait Stream[+A] {
     case Cons(h, t) => if (f(h())) Some(h()) else t().find(f)
   }
 
+  // helper for test
+  def toList(): List[A] = this match {
+    case Cons(h, t) => h() :: t().toList()
+    case _ => List()
+  }
+
   // Exercise
   def take(n: Int): Stream[A] = this match {
     case Cons(h, t) if n > 1 => cons(h(), t().take(n - 1))
@@ -25,7 +31,20 @@ trait Stream[+A] {
     case _ => empty
   }
 
-  def drop(n: Int): Stream[A] = ???
+  // Exercise
+  def drop(n: Int): Stream[A] = dropSol1(n)
+
+  def dropSol1(n: Int): Stream[A] = this match {
+    case Cons(_, t) if n > 0 => t().drop(n - 1)
+    case _ =>  this
+  }
+
+  def dropSol2(n: Int): Stream[A] = this match {
+    case Cons(_, t) if n > 1 => t().drop(n - 1)
+    case Cons(h, t) if n == 1 => t()
+    case Cons(h, t) if n == 0 => cons(h(), t())
+    case _ =>  empty
+  }
 
   def takeWhile(p: A => Boolean): Stream[A] = ???
 

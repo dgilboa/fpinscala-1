@@ -20,3 +20,7 @@ lazy val answers = (project in file("answers"))
   .settings(
     name := "answers"
   )
+
+libraryDependencies in exercises ++= Seq(
+  "org.scalatest" %% "scalatest" % "3.2.2" % "test"
+)
