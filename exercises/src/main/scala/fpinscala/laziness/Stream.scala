@@ -46,16 +46,30 @@ trait Stream[+A] {
     case _ =>  empty
   }
 
-  def takeWhile(p: A => Boolean): Stream[A] = ???
+  // Exercise
+  def takeWhile(p: A => Boolean): Stream[A] = this match {
+    case Cons(h, t) if p(h()) => cons(h(), t().takeWhile(p))
+    case _ => empty
+  }
 
-  def forAll(p: A => Boolean): Boolean = ???
+  // Exercise
+  def forAll(p: A => Boolean): Boolean = foldRight(true)((a, b) => p(a) && b)
 
-  def headOption: Option[A] = ???
+  def headOption: Option[A] = headOptionSol1
+
+  def headOptionSol1: Option[A] = this match {
+    case Cons(h, _) => Some(h())
+    case _ => None
+  }
+
+  def headOptionSol2: Option[A] = foldRight(None: Option[A])((h, _) => Some(h))
 
   // 5.7 map, filter, append, flatmap using foldRight. Part of the exercise is
   // writing your own function signatures.
 
-  def startsWith[B](s: Stream[B]): Boolean = ???
+  def startsWith[B](s: Stream[B]): Boolean = {
+    ???
+  }
 }
 case object Empty extends Stream[Nothing]
 case class Cons[+A](h: () => A, t: () => Stream[A]) extends Stream[A]
