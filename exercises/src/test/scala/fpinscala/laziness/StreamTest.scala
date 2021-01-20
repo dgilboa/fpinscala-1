@@ -65,4 +65,16 @@ class StreamTest extends AnyFlatSpec with Matchers with OptionValues {
     Stream(1, 2, 3, 4).startsWith(Stream()) shouldBe false
     Stream().startsWith(Stream()) shouldBe true
   }
+
+  "map stream" should "return mapped values" in {
+    Stream(1, 2, 3, 4).map(_ * 2).toList() should equal(List(2, 4, 6, 8))
+    Stream(1, 2, 3, 4).map(_ + 1).toList() should equal(List(2, 3, 4, 5))
+
+    Stream(1, 2, 3, 4).mapUsingFoldRight(_ * 2).toList() should equal(List(2, 4, 6, 8))
+    Stream(1, 2, 3, 4).mapUsingFoldRight(_ + 1).toList() should equal(List(2, 3, 4, 5))
+  }
+
+  "filter stream" should "return non filtered items only" in {
+    Stream(1, 2, 3, 4).filter(_ > 3).toList() should equal(List(4))
+  }
 }
