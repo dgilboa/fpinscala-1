@@ -76,6 +76,11 @@ trait Stream[+A] {
 
   def filter(f: A => Boolean): Stream[A] = foldRight(empty[A])((h, t) => if (f(h)) cons(h, t) else t)
 
+  def append[B>:A](bs: => Stream[B]): Stream[B] = foldRight(bs)((h, t) => cons(h, t))
+
+  def flatmap[B](f: A => Stream[B]): Stream[B] =
+    foldRight(empty[B])((h, t) => f(h) append t)
+
   def startsWith[B](s: Stream[B]): Boolean = {
     ???
   }
@@ -97,7 +102,8 @@ object Stream {
     else cons(as.head, apply(as.tail: _*))
 
   val ones: Stream[Int] = Stream.cons(1, ones)
-  def from(n: Int): Stream[Int] = ???
+  def constant[A](a: A): Stream[A] = Stream.cons(a, constant(a))
+  def from(n: Int): Stream[Int] = cons(n, from(n+1))
 
   def unfold[A, S](z: S)(f: S => Option[(A, S)]): Stream[A] = ???
 }

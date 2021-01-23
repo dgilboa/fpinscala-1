@@ -77,4 +77,19 @@ class StreamTest extends AnyFlatSpec with Matchers with OptionValues {
   "filter stream" should "return non filtered items only" in {
     Stream(1, 2, 3, 4).filter(_ > 3).toList() should equal(List(4))
   }
+
+  "appending another stream" should "result in both streams appended" in {
+    Stream(1, 2, 3).append(Stream(5,6)).toList() should equal(List(1, 2, 3 ,5, 6))
+    Stream(1, 2, 3).append(Stream(5,6)).toList() should not equal(List(1, 2, 3 ,6, 5))
+  }
+
+  "flatmap of streams " should "return flattened streams" in {
+    Stream(1, 2, 3).flatmap(x => Stream(x, x)).toList() should equal(List(1,1,2,2,3,3))
+//    Stream[String]("hi", "there").flatmap(s => Stream(s.flatten)) should equal(List('h', 'i', 't', 'h','r', 'e'))
+  }
+
+
+  "constant" should "return const" in {
+    Stream.constant(1).take(3).toList() should equal(Stream.ones.take(3).toList())
+  }
 }
