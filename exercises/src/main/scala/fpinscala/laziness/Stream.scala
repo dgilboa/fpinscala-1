@@ -110,7 +110,12 @@ object Stream {
   def from(n: Int): Stream[Int] = cons(n, from(n+1))
 
   // Exercises
-//  def fibs()
+  def fibs() = {
+    def nextfib(h: Int ,t: Int):Stream[Int] =
+      cons(h, nextfib(t, h + t))
+    nextfib(0, 1)
+  }
+
   def unfold[A, S](z: S)(f: S => Option[(A, S)]): Stream[A] = {
     lazy val maybeA = f(z)
     maybeA match {

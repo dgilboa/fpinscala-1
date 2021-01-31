@@ -95,4 +95,9 @@ class StreamTest extends AnyFlatSpec with Matchers with OptionValues {
   "from" should " return increasing series" in {
     Stream.from(1).take(3).toList() should equal(List(1, 2, 3))
   }
+
+  "fibs" should "calculate correctly" in {
+    Stream.fibs().take(3).toList() should equal(List(0, 1, 1))
+//    Stream.fibs().take(5).headOption should equal(List(0, 1, 1))
+  }
 }
