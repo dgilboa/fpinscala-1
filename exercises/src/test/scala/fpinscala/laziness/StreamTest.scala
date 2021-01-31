@@ -88,8 +88,11 @@ class StreamTest extends AnyFlatSpec with Matchers with OptionValues {
 //    Stream[String]("hi", "there").flatmap(s => Stream(s.flatten)) should equal(List('h', 'i', 't', 'h','r', 'e'))
   }
 
-
   "constant" should "return const" in {
     Stream.constant(1).take(3).toList() should equal(Stream.ones.take(3).toList())
+  }
+
+  "from" should " return increasing series" in {
+    Stream.from(1).take(3).toList() should equal(List(1, 2, 3))
   }
 }

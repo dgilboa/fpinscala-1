@@ -18,7 +18,11 @@ trait Stream[+A] {
     case Cons(h, t) => if (f(h())) Some(h()) else t().find(f)
   }
 
-  // helper for test
+  // Exercise
+  /**
+    * This is actually not a stack safe solution - for large inputs it will stack overflow cause
+    * it's not tail recursive.
+  */
   def toList(): List[A] = this match {
     case Cons(h, t) => h() :: t().toList()
     case _ => List()
@@ -105,5 +109,14 @@ object Stream {
   def constant[A](a: A): Stream[A] = Stream.cons(a, constant(a))
   def from(n: Int): Stream[Int] = cons(n, from(n+1))
 
-  def unfold[A, S](z: S)(f: S => Option[(A, S)]): Stream[A] = ???
+  // Exercises
+//  def fibs()
+  def unfold[A, S](z: S)(f: S => Option[(A, S)]): Stream[A] = {
+    lazy val maybeA = f(z)
+    maybeA match {
+      case Some(a) => Cons(a._1, unfold())
+      case None => empty[A]
+    }
+  }
+
 }
