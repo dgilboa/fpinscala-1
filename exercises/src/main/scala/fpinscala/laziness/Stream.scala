@@ -21,11 +21,21 @@ trait Stream[+A] {
   // Exercise
   /**
     * This is actually not a stack safe solution - for large inputs it will stack overflow cause
-    * it's not tail recursive.
+    * it's not tail recursive, it's a simple recursive function,
+    * to make it tail recursive it needs to be with an internal function.
   */
   def toList(): List[A] = this match {
     case Cons(h, t) => h() :: t().toList()
     case _ => List()
+  }
+
+  def toListTailRecursive: List[A] = {
+    @annotation.tailrec
+    def recursive(s: Stream[A], acc: List[A]): List[A] = s match {
+      case Cons(h, t) => recursive(t(), h() :: acc)
+      case _ => acc
+    }
+    recursive(this, List.empty[A]).reverse
   }
 
   // Exercise
@@ -110,7 +120,7 @@ object Stream {
   def from(n: Int): Stream[Int] = cons(n, from(n+1))
 
   // Exercises
-  def fibs() = {
+  def fibs(): Stream[Int] = {
     def nextfib(h: Int ,t: Int):Stream[Int] =
       cons(h, nextfib(t, h + t))
     nextfib(0, 1)
