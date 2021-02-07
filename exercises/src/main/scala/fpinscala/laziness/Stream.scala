@@ -127,9 +127,8 @@ object Stream {
   }
 
   def unfold[A, S](z: S)(f: S => Option[(A, S)]): Stream[A] = {
-    lazy val maybeA = f(z)
-    maybeA match {
-      case Some(a) => Cons(a._1, unfold())
+    f(z) match {
+      case Some((h, s)) => cons(h, unfold(s)(f))
       case None => empty[A]
     }
   }
