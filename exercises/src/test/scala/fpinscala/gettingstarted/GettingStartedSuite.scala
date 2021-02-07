@@ -10,4 +10,10 @@ class GettingStartedSuite  extends AnyFlatSpec with Matchers{
     MyModule.fib(5) should equal(5)
     MyModule.fib(6) should equal(8)
   }
+
+  "Polymorphic is sorted" should "work correctly for different kinds of types" in {
+    PolymorphicFunctions.isSorted[Int](Array(1, 2, 3, 4), (x, y) => (x < y)) should be(true)
+    PolymorphicFunctions.isSorted[Int](Array(1, 2, 3, 4), (x, y) => (x > y)) should be(false)
+    PolymorphicFunctions.isSorted(Array("a", "aa", "abc", "abcd"), (x:String, y:String) => (x.length < y.length)) should be(true)
+  }
 }
