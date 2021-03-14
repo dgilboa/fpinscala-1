@@ -11,7 +11,7 @@ sealed trait Option[+A] {
 
   def getOrElse[B>:A](default: => B): B = this match {
     case None => default
-    case _ => _
+    case Some(a) => a
   }
 
   def flatMap[B](f: A => Option[B]): Option[B] = this match {
@@ -19,9 +19,11 @@ sealed trait Option[+A] {
     case Some(a) => f(a)
   }
 
+  def flatMap1[B](f: A => Option[B]): Option[B] = map f getOrElse None
+
   def orElse[B>:A](ob: => Option[B]): Option[B] = this match {
     case None => ob
-    case _ => _
+    case _ => this
   }
 
   def filter(f: A => Boolean): Option[A] = this match {
@@ -53,9 +55,22 @@ object Option {
   def mean(xs: Seq[Double]): Option[Double] =
     if (xs.isEmpty) None
     else Some(xs.sum / xs.length)
-  def variance(xs: Seq[Double]): Option[Double] = ???
 
-  def map2[A,B,C](a: Option[A], b: Option[B])(f: (A, B) => C): Option[C] = ???
+  // True ?
+  def variance(xs: Seq[Double]): Option[Double] =
+    mean(xs.flatMap(math.pow(_ - mean(xs), 2)))
+
+  def variance_1(xs: Seq[Double]): Option[Double] =
+    mean(xs).flatMap(theMean => mean(xs.map(math.pow(_ - theMean, 2))))
+
+  def map2[A,B,C](a: Option[A], b: Option[B])(f: (A, B) => C): Option[C] =
+    for {
+      theA <- a
+      theB <- b
+    } yield f(theA, theB)
+
+  def map2_1[A,B,C](a: Option[A], b: Option[B])(f: (A, B) => C): Option[C] =
+    a.flatMap(theA => b.flatMap(theB => f(theA, theB)))
 
   def sequence[A](a: List[Option[A]]): Option[List[A]] = ???
 
